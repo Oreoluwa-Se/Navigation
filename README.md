@@ -68,3 +68,8 @@ When evaluated, the we were able to achieve a score of 16
 <p align="center">
 <img src="./results/128_128/Score.PNG">
 </p>
+
+Sample run with the 32x32 model
+<p align="center">
+<img src="./results/run.gif">
+</p>
