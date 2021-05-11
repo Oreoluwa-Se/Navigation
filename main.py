@@ -4,6 +4,7 @@ from helpers.agent import Agent
 import matplotlib.pyplot as plt
 from collections import deque
 import numpy as np
+import argparse
 import torch
 
 plt.ion()
@@ -44,8 +45,8 @@ def training_run(n_episodes, n_timesteps, agent, brain_name):
     score_window = deque(maxlen=100)
     scores = []
     plot_flag = False
-    max_average_found = 10
-    max_Episode = None
+    max_average_found = 12
+    max_episode = None
     end = ""
 
     # loop through episodes
@@ -98,16 +99,20 @@ def training_run(n_episodes, n_timesteps, agent, brain_name):
             max_average_found = average_score
             max_episode = agent.episode_steps 
 
-    if max_average_found > 10:
-        print('\nEnvironment solved in {: d} episodes!\tAverage Score: {: .2f}'.format(max_Episode - 100, average_score))
+    if max_average_found > 12:
+        print('\nEnvironment best score in {: d} episodes!\t Max average Score: {: .2f}'.format(max_episode - 100, max_average_found))
         torch.save(agent.network.state_dict(), 'results/ddqn_max_{}.pth'.format(agent.name))
         end = 'ddqn_max_{}.pth'.format(agent.name)
    
     return scores, plot_flag, end
 
-def run(agent, brain_name, env, end):
+def run(agent, brain_name, env, end=None, path=None):
     # load agent
-    agent.network.load_state_dict(torch.load('results/{}'.format(end)))
+    if path == None:
+        agent.network.load_state_dict(torch.load('results/{}'.format(end)))
+    else:
+        agent.network.load_state_dict(torch.load(path))
+
     env_info = env.reset(train_mode=False)[brain_name] # reset the environment
     state = env_info.vector_observations[0]            # get the current state
     score = 0                                          # initialize the score
@@ -124,15 +129,15 @@ def run(agent, brain_name, env, end):
         
     print("Score: {}".format(score))
 
-def plot(scores, agent):
+def plot(scores, end):
     # plot the scores
     fig = plt.figure()
     ax = fig.add_subplot(111)
     plt.plot(np.arange(len(scores)), scores)
     plt.ylabel('Score')
     plt.xlabel('Episode #')
-    plt.savefig('results/dddqn_scores_{}.png'.format(agent.name), bbox_inches='tight')
-    plt.show()
+    plt.savefig('results/{}.png'.format(end[:-4]), bbox_inches='tight')
+    
 
 
 
@@ -143,14 +148,14 @@ if __name__ == "__main__":
     agent_parameters = {
         'network_config': {
             'state_size': state_size,
-            'array_fc_units': [64, 64],
+            'array_fc_units': [32, 32],
             'action_size': action_size
         },
-        'optimizer_config': {'learning_rate': 1e-3},
-        'replay_buffer_size': int(1e5),
-        'batch_size': 8,
-        'num_replay_updates_per_step': 4,
-        'gamma': 0.99,
+        'optimizer_config': {'learning_rate': 0.0005},
+        'replay_buffer_size': 100000,
+        'batch_size': 64,
+        'num_replay_updates_per_step': 8,
+        'gamma': 0.9,
         'greedy':{'explore_start':1.0,
                   'explore_stop':0.01,
                   'decay_rate':0.00005},
@@ -158,14 +163,30 @@ if __name__ == "__main__":
         "seed": 0
     }
     
-    # initialize agent. option can be set to [1 - Q_learning, 2- Expected Sarsa]
-    agent = Agent(agent_info=agent_parameters, option=1)
-    # pre populate the replay memory
-    agent.prepopulate(brain_name, env)
-    # train the
-    scores, plot_flag, end = training_run(500, 5000, agent, brain_name)
-    # plot and save the scores
-    if plot_flag:
-        plot(scores, agent)
+    # required arguments
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-k", "--check", required=True,
+        help="Training or Evaluating? [T - Training, E - Evaluating]")
+    ap.add_argument("-dt", "--weights", help="path to where file should be looaded")
+    args = vars(ap.parse_args())
+
+    if args["check"].lower() == "t":
+        # initialize agent. option can be set to [1 - Q_learning, 2- Expected Sarsa]
+        agent = Agent(agent_info=agent_parameters, option=1)
+        # pre populate the replay memory
+        agent.prepopulate(brain_name, env)
+        # train the
+        scores, plot_flag, end = training_run(1000, 5000, agent, brain_name)
+        # plot and save the scores
+        if plot_flag:
+            plot(scores, end)
+            # run the agent
+            run(agent, brain_name, env, end=end)
+    elif args["check"].lower() == "e":
+        # initialize agent. option can be set to [1 - Q_learning, 2- Expected Sarsa]
+        agent = Agent(agent_info=agent_parameters, option=1)
         # run the agent
-        run(agent, brain_name, env, end)
+        run(agent, brain_name, env, path=args["weights"])
+
+
+

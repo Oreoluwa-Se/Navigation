@@ -20,7 +20,7 @@ class Agent:
         # initialize agent
         self.agent_init(agent_info)
     
-    # initialize update type. Q_update, Expected_Sarsa
+    # initialize update type. Q_update, Expected_Sarsa 
     def type_init(self, option):
         if option==1:
             self.name = "Q_update"
@@ -75,6 +75,9 @@ class Agent:
         self.total_steps   = 0
         self.episode_steps = 0
         self.weight_update = 0
+
+        # PARAMETER TRACKERS FOR GAE
+        
 
     def prepopulate(self, brain_name, env):
         """
@@ -169,7 +172,9 @@ class Agent:
             # randomly select and type cast as int
             action = int(self.rand_generator.choice(np.arange(self.num_actions)))
         else:
-            action = int(np.argmax(action_values))
+            # use softmax to calculate probability
+            probs_state = self.softmax(action_values)
+            action = self.rand_generator.choice(self.num_actions, p=probs_state.squeeze())
         # return list of selected actions per row in batch
         return action 
 
@@ -241,13 +246,12 @@ class Agent:
         # add to replay buffer
         self.replay_buffer.store(self.last_state, self.last_action, reward, state, done)
 
-        # incremental mini updates
-        self.weight_update_control()
-
         # number of times we use the replay buffer
         for _ in range(self.num_replay):               
             # optimize the network
             self.optimize_network()
+            # incremental mini updates
+            self.weight_update_control()
 
         # update last state and last action
         self.last_state = state
@@ -270,13 +274,13 @@ class Agent:
         self.replay_buffer.store(self.last_state, self.last_action, reward, state, done)
         # increment the replay steps
         self.total_steps += 1
-
-        # incremental mini updates
-        self.weight_update_control()
+        
         # perform replay steps
         for _ in range(self.num_replay):               
             #optimize the network
             self.optimize_network()
+            # incremental mini updates
+            self.weight_update_control()
 
         
 
@@ -321,9 +325,7 @@ class Agent:
                 - use the dqn network to select action to take and next state(a')
                 - use target network to calculate the q_val of Q(s', a')
         """
-        # target storage
-        q_target = None
-
+        
         # forward pass on local network and target network for next state to get q_values
         q_local_next = self.network(next_states).detach()
         q_targets_next = self.target(next_states).detach()
@@ -375,21 +377,17 @@ class Agent:
         # calculate absolute error: conver to numpy
         abs_error = torch.abs(diff).cpu().detach().numpy()
         # calculate weighted mean square error
-        loss = torch.mean(ISweights * (diff**2))
+        loss = (ISweights * diff.pow(2)).mean()
 
         # return the loss and absolute difference
         return loss, abs_error
 
     # controls how the weights are updated
-    def weight_update_control(self):
-        if self.episode_steps % 100 == 0:
-            self.soft_update(self.network, self.target, tau=1.0)
-        else:
-            # update weights
-            self.soft_update(self.network, self.target)
+    def weight_update_control(self, tau=0.001):
+        self.soft_update(self.network, self.target, tau)
 
 
-    def soft_update(self, local_model, target_model, tau=0.001):
+    def soft_update(self, local_model, target_model, tau=0.01):
         """Soft update model parameters.
         θ_target = τ*θ_local + (1 - τ)*θ_target
 
