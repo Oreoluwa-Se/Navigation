@@ -36,8 +36,19 @@ The task is episodic, and in order to solve the environment, your agent must get
 
 ### Results
 
-The final structure for this project was a *Double Learning Dueling Network with Prioritzed Experience Learning*. The reason for the selection are as followed:
-	- To reduce the chance of overestimating the q_values we used the double learning scheme. [click here](https://arxiv.org/pdf/1509.06461.pdf)
+The final structure for this project was a *Double Learning Dueling Network with Prioritzed Experience Learning*. The reason for the selection are as follows:
+    - To reduce the chance of overestimating the q_values we used the [double learning scheme](https://arxiv.org/pdf/1509.06461.pdf).
+    - [Dueling network](https://arxiv.org/pdf/1511.06581.pdf) was chosen as it can help the agent compare similarly valued actions more accurately and faster.
+    - Using [prioritized replay](https://arxiv.org/pdf/1511.05952.pdf) lets the agent use past experiences to train quicker.
+
+Other tweaks included:
+    - Activating the logits before calculating the advantage which seemed to speed up the learning. 
+    - Learning over multiple replay steps in one run. Optimal step count was 4.
+
+With the steps taken the agent was able to learn in 340 steps.
+<p align="center">
+<img src="./results/32x32/Environment_solved.png">
+</p>
 
 
 
