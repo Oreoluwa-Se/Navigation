@@ -36,7 +36,8 @@ The task is episodic, and in order to solve the environment, your agent must get
 
 ### Results
 
-The final structure for this project was a *double learning dueling network with prioritzed experience learning*.
+The final structure for this project was a *Double Learning Dueling Network with Prioritzed Experience Learning*. The reason for the selection are as followed:
+	- To reduce the chance of overestimating the q_values we used the double learning scheme. [click here](https://arxiv.org/pdf/1509.06461.pdf)
 For the project, A dueling network structure was chosen as the feature approximator. The benefits of using this structure is that we can tell which actions are beneficial in particular states.
 
 
