@@ -47,7 +47,7 @@ Other tweaks included:
 
 With the steps taken the agent was able to learn in 340 steps.
 <p align="center">
-<img src="./results/32x32/Environment_solved.png">
+<img src="./results/32x32/solved.png">
 </p>
 
 
