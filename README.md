@@ -61,7 +61,7 @@ When evaluated, the we were able to achieve a score of 12
 The network uses a network with two 128 hidden dimension layers before the value and advantage layers are calculated.
 With the steps taken the agent was able to learn in 1320 steps. The distribution of the average score per episode is shown below
 <p align="center">
-<img src="./results/128_128/dddqn_scores.PNG">
+<img src="./results/128_128/dddqn_scores.png">
 </p>
 
 When evaluated, the we were able to achieve a score of 16
