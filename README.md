@@ -49,7 +49,7 @@ Other tweaks included:
 The network uses a network with two 32 hidden dimension layers before the value and advantage layers are calculated.
 The distribution of the average score per episode is shown below:
 <p align="center">
-<img src="./results/32_32/ddqn_scores_Q_update.PNG">
+<img src="./results/32_32/dddqn_scores_Q_update.png">
 </p>
 
 When evaluated, the we were able to achieve a score of 12
