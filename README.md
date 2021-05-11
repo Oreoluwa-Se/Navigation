@@ -1,14 +1,12 @@
-[//]: # (Image References)
-
-[image1]: https://user-images.githubusercontent.com/10624937/42135619-d90f2f28-7d12-11e8-8823-82b970a54d7e.gif "Trained Agent"
-
 # Project 1: Navigation
 
 ### Introduction
 
 For this project, you will train an agent to navigate (and collect bananas!) in a large, square world.  
 
-![Trained Agent][image1]
+<p align="center">
+<img src="./results/run.gif">
+</p>
 
 A reward of +1 is provided for collecting a yellow banana, and a reward of -1 is provided for collecting a blue banana.  Thus, the goal of your agent is to collect as many yellow bananas as possible while avoiding blue bananas.  
 
@@ -67,9 +65,4 @@ With the steps taken the agent was able to learn in 1320 steps. The distribution
 When evaluated, the we were able to achieve a score of 16
 <p align="center">
 <img src="./results/128_128/Score.PNG">
-</p>
-
-Sample run with the 32x32 model
-<p align="center">
-<img src="./results/run.gif">
 </p>
