@@ -34,14 +34,9 @@ The task is episodic, and in order to solve the environment, your agent must get
 
 ### Results
 
-The final structure for this project was a **Double Learning Dueling Network with Prioritzed Experience Learning**. The reason for the selection are as follows:
-    - To reduce the chance of overestimating the q_values we used the [double learning scheme](https://arxiv.org/pdf/1509.06461.pdf).
-    - [Dueling network](https://arxiv.org/pdf/1511.06581.pdf) was chosen as it can help the agent compare similarly valued actions more accurately and faster.
-    - Using [prioritized replay](https://arxiv.org/pdf/1511.05952.pdf) lets the agent use past experiences to train quicker.
+The final structure for this project was a **Double Learning Dueling Network with Prioritzed Experience Learning**. To reduce the chance of overestimating the q_values we used the [double learning scheme](https://arxiv.org/pdf/1509.06461.pdf). [Dueling network](https://arxiv.org/pdf/1511.06581.pdf) was chosen as it can help the agent compare similarly valued actions more accurately and faster. Using [prioritized replay](https://arxiv.org/pdf/1511.05952.pdf) lets the agent use past experiences to train quicker.
 
-Other tweaks included:
-    - Activating the logits before calculating the advantage which seemed to speed up the learning. 
-    - Learning over multiple replay steps in one run. Optimal step count was 4.
+Other tweaks included: Activating the logits before calculating the advantage which seemed to speed up the learning, and  learning over multiple replay steps in one run. Optimal step count was 4.
 
 #### 32_32 Network
 The network uses a network with two 32 hidden dimension layers before the value and advantage layers are calculated.
@@ -66,3 +61,8 @@ When evaluated, the we were able to achieve a score of 16
 <p align="center">
 <img src="./results/128_128/Score.PNG">
 </p>
+
+### Run instructions
+To run the script you can:
+    - To run the learning script: `python main.py --check T`
+    - To evaluate model: `python main.py --check E --weights results\32_32\ddqn_13_Q_update.pth`
