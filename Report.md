@@ -44,7 +44,7 @@ All networks were trained with adam optimizers using the same learning rate of 5
 ### Results
 #### 32_32 Network
 The network uses a network with two 32 hidden dimension layers before the value and advantage layers are calculated.
-The distribution of the average score per episode is shown below:
+The distribution of the average score per episode is shown below. The environment was solved in **340 episodes**:
 <p align="center">
 <img src="./results/32_32/dddqn_scores_Q_update.png">
 </p>
@@ -56,7 +56,7 @@ When evaluated, the we were able to achieve a score of 12
 
 #### 128_128 Network
 The network uses a network with two 128 hidden dimension layers before the value and advantage layers are calculated.
-With the steps taken the agent was able to learn in 1320 steps. The distribution of the average score per episode is shown below
+With the steps taken the environment was solved **1320 steps**. The distribution of the average score per episode is shown below
 <p align="center">
 <img src="./results/128_128/dddqn_scores.png">
 </p>
