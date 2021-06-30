@@ -32,6 +32,8 @@ The task is episodic, and in order to solve the environment, your agent must get
 
 2. Place the file in the DRLND GitHub repository, in the `p1_navigation/` folder, and unzip (or decompress) the file. 
 
+For more instructions on installing dependencies or downloading needed files visit [here](https://github.com/udacity/deep-reinforcement-learning#dependencies)
+
 ### Run instructions
 - To run the learning script: `python main.py --check T`
 - To evaluate model: `python main.py --check E --weights results\32_32\ddqn_13_Q_update.pth`
